@@ -1,4 +1,6 @@
-{
+import 'dotenv/config';
+
+export default {
   "expo": {
     "name": "Cutters",
     "slug": "Cutters",
@@ -9,13 +11,22 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": process.env.GOOGLE_API_KEY
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff"        
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": process.env.GOOGLE_API_KEY
+        }
       }
+
     },
     "web": {
       "bundler": "metro",
@@ -37,5 +48,6 @@
     "experiments": {
       "typedRoutes": true
     }
+    
   }
-}
+};
