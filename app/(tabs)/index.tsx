@@ -1,6 +1,7 @@
 import 'expo-dev-client'
 import {
     Text,
+    Image,
     View,
     StyleSheet,
     FlatList,
@@ -52,7 +53,12 @@ export default function App() {
                             coordinate={{ latitude, longitude }}
                             title={marker.name}
                             description={marker.address}
-                        />
+                        >
+                            <Image
+                                source={require('../../assets/images/shape.png')}
+                                style={{ width: 28, height: 28 }}
+                            />
+                        </Marker>
                     )
                 })}
             </MapView>
