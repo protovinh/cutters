@@ -9,11 +9,11 @@ import {
     ActivityIndicator,
 } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
-import { useLocationPermission } from '@/src/hooks/useLocationPermission'
-import { useFetchSalons } from '@/src/api/useFetchSalons'
-import CuttersMapStyle from '@/src/constants/CuttersMapStyle.json'
+import { useLocationPermission } from '@/hooks/useLocationPermission'
+import { useFetchSalons } from '@/api/useFetchSalons'
+import CuttersMapStyle from '@/constants/CuttersMapStyle.json'
 
-export default function App() {
+export default function HomeScreen() {
     const { location } = useLocationPermission()
     const { data, loading } = useFetchSalons()
 
