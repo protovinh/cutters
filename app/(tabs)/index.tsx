@@ -10,6 +10,7 @@ import {
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { useLocationPermission } from '@/src/hooks/useLocationPermission'
 import { useFetchSalons } from '@/src/api/useFetchSalons'
+import CuttersMapStyle from '@/src/constants/CuttersMapStyle.json'
 
 export default function App() {
     const { location } = useLocationPermission()
@@ -26,6 +27,7 @@ export default function App() {
                 style={styles.map}
                 showsUserLocation
                 provider={PROVIDER_GOOGLE}
+                customMapStyle={CuttersMapStyle}
                 initialRegion={{
                     latitude: location?.coords.latitude ?? 60.3913,
                     longitude: location?.coords.longitude ?? 5.3221,
