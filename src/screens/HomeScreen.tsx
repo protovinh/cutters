@@ -12,6 +12,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { useLocationPermission } from '@/hooks/useLocationPermission'
 import { useFetchSalons } from '@/api/useFetchSalons'
 import CuttersMapStyle from '@/constants/CuttersMapStyle.json'
+import { CustomMarker } from '@/components/ui/CustomMarker'
 
 export default function HomeScreen() {
     const { location } = useLocationPermission()
@@ -36,31 +37,9 @@ export default function HomeScreen() {
                     longitudeDelta: 0.0421,
                 }}
             >
-                {data.map((marker) => {
-                    const latitude = parseFloat(marker.coordinates.latitude)
-                    const longitude = parseFloat(marker.coordinates.longitude)
-
-                    if (isNaN(latitude) || isNaN(longitude)) {
-                        console.log(
-                            `Invalid coordinates for marker ${marker.id}`
-                        )
-                        return null
-                    }
-
-                    return (
-                        <Marker
-                            key={marker.id}
-                            coordinate={{ latitude, longitude }}
-                            title={marker.name}
-                            description={marker.address}
-                        >
-                            <Image
-                                source={require('../../assets/images/shape.png')}
-                                style={{ width: 28, height: 28 }}
-                            />
-                        </Marker>
-                    )
-                })}
+                {data.map((shop) => (
+                    <CustomMarker key={shop.id} marker={shop} />
+                ))}
             </MapView>
 
             <View style={styles.listContainer}>
