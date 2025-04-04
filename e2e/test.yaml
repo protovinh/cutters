@@ -1,0 +1,6 @@
+# test.yaml
+
+appId: com.vinvu2000.Cutters
+---
+- launchApp
+- tapOn: "Text on the screen"
