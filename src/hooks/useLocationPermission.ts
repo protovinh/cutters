@@ -19,4 +19,5 @@ export function useLocationPermission() {
 
         getCurrentLocation()
     }, [])
+    return { location }
 }
