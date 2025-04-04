@@ -1,3 +1,4 @@
+import 'expo-dev-client'
 import { useState, useEffect } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -50,12 +51,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <MapView
-          style={styles.map}
-          showsUserLocation
-          
-        ></MapView>
-      {/* location && data.length > 0 ? (
+      {location && data.length > 0 ? (
         <MapView
           style={styles.map}
           showsUserLocation
@@ -88,7 +84,7 @@ export default function App() {
         </MapView>
       ) : (
         <Text>Loading location or markers...</Text>
-      ) */}
+      )}
     </View>
   );
 }
