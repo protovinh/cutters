@@ -50,7 +50,12 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {location && data.length > 0 ? (
+      <MapView
+          style={styles.map}
+          showsUserLocation
+          
+        ></MapView>
+      {/* location && data.length > 0 ? (
         <MapView
           style={styles.map}
           showsUserLocation
@@ -83,7 +88,7 @@ export default function App() {
         </MapView>
       ) : (
         <Text>Loading location or markers...</Text>
-      )}
+      ) */}
     </View>
   );
 }
