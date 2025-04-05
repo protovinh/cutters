@@ -71,7 +71,7 @@ export interface WaitTime {
         waittime: null | string
         state: string
     }
-    simulationTime: string
+    simulationTime: string | null
     customers: Array<Customer>
     scheduledBreaks: Array<Object>
 }
