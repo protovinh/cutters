@@ -14,12 +14,20 @@ export default function RootNavigator() {
         <NavigationContainer>
             <Tab.Navigator
                 screenOptions={{
-                    tabBarActiveTintColor: '#FFDD00',
-                    tabBarInactiveTintColor: 'gray',
+                    animation: 'shift',
                     tabBarStyle: {
-                        backgroundColor: 'black',
+                        position: 'absolute',
+                        borderTopWidth: 0,
+                        backgroundColor: '#000000',
                     },
-                    headerShown: false,
+                    tabBarShowLabel: false,
+                    tabBarActiveTintColor: '#FFDD00',
+                    tabBarInactiveTintColor: '#3c3c3c',
+                    tabBarIconStyle: {
+                        marginTop: 4,
+                        width: 28,
+                        height: 28,
+                    },
                 }}
             >
                 <Tab.Screen
@@ -30,7 +38,7 @@ export default function RootNavigator() {
                         tabBarIcon: ({ color }) => (
                             <MaterialCommunityIcons
                                 name="map-marker-radius-outline"
-                                size={24}
+                                size={28}
                                 color={color}
                             />
                         ),
@@ -42,7 +50,12 @@ export default function RootNavigator() {
                     options={{
                         headerShown: true,
                         tabBarIcon: ({ color }) => (
-                            <Entypo name="scissors" size={24} color={color} />
+                            <Entypo
+                                name="scissors"
+                                size={28}
+                                color={color}
+                                style={{ transform: [{ rotate: '-45deg' }] }}
+                            />
                         ),
                     }}
                 />
@@ -52,7 +65,7 @@ export default function RootNavigator() {
                     options={{
                         headerShown: true,
                         tabBarIcon: ({ color }) => (
-                            <Octicons name="person" size={24} color={color} />
+                            <Octicons name="person" size={28} color={color} />
                         ),
                     }}
                 />

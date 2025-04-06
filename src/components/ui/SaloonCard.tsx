@@ -6,6 +6,7 @@ import {
     FlatList,
     Dimensions,
     Pressable,
+    AccessibilityInfo,
 } from 'react-native'
 import { useState } from 'react'
 import { mockSaloon } from '@/api/mocks/saloonNorge'
@@ -40,8 +41,14 @@ export function SaloonCard() {
                         <Pressable
                             onPress={() => toggleOpeningHours(item.id)}
                             style={styles.dropdownButton}
+                            accessibilityRole="button"
+                            accessibilityLabel={
+                                expandedShopId === item.id
+                                    ? `Hide opening hours for ${item.name}`
+                                    : `Show opening hours for ${item.name}`
+                            }
                         >
-                            <Text style={styles.itemOpeningHours}>
+                            <Text style={styles.dropdownText}>
                                 {expandedShopId === item.id
                                     ? 'Hide Opening Hours'
                                     : 'Show Opening Hours'}
@@ -49,7 +56,11 @@ export function SaloonCard() {
                         </Pressable>
 
                         {expandedShopId === item.id && item.openingHours && (
-                            <View style={styles.openingHoursContainer}>
+                            <View
+                                style={styles.openingHoursContainer}
+                                accessible
+                                accessibilityLabel={`Opening hours for ${item.name}`}
+                            >
                                 {Object.keys(item.openingHours.schedule).map(
                                     (day) => {
                                         const schedule =
@@ -115,6 +126,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFDD00',
         borderRadius: 5,
         alignItems: 'center',
+    },
+    dropdownText: {
+        color: '#000',
+        fontWeight: 'bold',
+        fontSize: 14,
     },
     openingHoursContainer: {
         marginTop: 10,
