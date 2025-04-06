@@ -1,27 +1,24 @@
-import { Text, View, StyleSheet } from 'react-native'
-import Button from '@/components/ui/Button'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
+import AktivScreen from './AktivScreen'
+import HistoryScreen from './HistoryScreen'
+
+const Tab = createMaterialTopTabNavigator()
 
 export default function ScissorScreen() {
     return (
-        <View style={styles.container}>
-            <Button
-                title="Press me"
-                onPress={() => {
-                    console.log('Pressed')
-                }}
-            />
-        </View>
+        <Tab.Navigator
+            screenOptions={{
+                tabBarActiveTintColor: '#FFDD00',
+
+                tabBarStyle: { backgroundColor: '#25292e' },
+                tabBarIndicatorStyle: {
+                    backgroundColor: '#FFDD00',
+                    padding: 2,
+                },
+            }}
+        >
+            <Tab.Screen name="Home" component={AktivScreen} />
+            <Tab.Screen name="Profile" component={HistoryScreen} />
+        </Tab.Navigator>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#25292e',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    text: {
-        color: '#fff',
-    },
-})
