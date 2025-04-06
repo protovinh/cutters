@@ -17,8 +17,8 @@ export default function ScissorScreen() {
                 },
             }}
         >
-            <Tab.Screen name="Home" component={AktivScreen} />
-            <Tab.Screen name="Profile" component={HistoryScreen} />
+            <Tab.Screen name="Aktive" component={AktivScreen} />
+            <Tab.Screen name="Historiske" component={HistoryScreen} />
         </Tab.Navigator>
     )
 }
