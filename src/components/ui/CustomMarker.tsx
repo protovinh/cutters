@@ -24,16 +24,15 @@ export function CustomMarker(props: Props) {
             coordinate={{ latitude, longitude }}
             title={props.marker.name}
             description={props.marker.address}
+            accessibilityLabel={`Location: ${props.marker.name}, Address: ${props.marker.address}`}
+            accessible={true}
+            onPress={() => setExpanded(!expanded)}
         >
-            <Pressable onPress={() => setExpanded(!expanded)}>
-                <View
-                    style={[styles.circle, expanded && styles.circleExpanded]}
-                >
-                    <Text style={styles.text}>
-                        {expanded ? props.marker.name : props.marker.name[0]}
-                    </Text>
-                </View>
-            </Pressable>
+            <View style={[styles.circle, expanded && styles.circleExpanded]}>
+                <Text style={styles.text}>
+                    {expanded ? props.marker.name : props.marker.name[0]}
+                </Text>
+            </View>
         </Marker>
     )
 }
