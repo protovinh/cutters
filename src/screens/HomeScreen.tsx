@@ -6,7 +6,9 @@ import {
     FlatList,
     Dimensions,
     ActivityIndicator,
+    Pressable,
 } from 'react-native'
+import { useState } from 'react'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import { useLocationPermission } from '@/hooks/useLocationPermission'
 import { useFetchSalons } from '@/api/useFetchSalons'
@@ -19,7 +21,8 @@ export default function HomeScreen() {
     const { location } = useLocationPermission()
     const { data, loading } = useFetchSalons()
 
-    // Combine mock salon data with opening hours data
+    const [expandedShopId, setExpandedShopId] = useState<number | null>(null)
+
     const salonsWithOpeningHours = mockSaloon.salons.map((salon) => {
         const salonHours = openingHours.find(
             (hours) => hours.openinghours.salonId === salon.id
@@ -29,6 +32,10 @@ export default function HomeScreen() {
             openingHours: salonHours ? salonHours.openinghours : null,
         }
     })
+
+    const toggleOpeningHours = (shopId: number) => {
+        setExpandedShopId((prevId) => (prevId === shopId ? null : shopId))
+    }
 
     return (
         <View style={styles.container}>
@@ -65,14 +72,50 @@ export default function HomeScreen() {
                             <Text style={styles.itemAddress}>
                                 {item.address}
                             </Text>
-                            {item.openingHours && (
+
+                            <Pressable
+                                onPress={() => toggleOpeningHours(item.id)}
+                                style={styles.dropdownButton}
+                            >
                                 <Text style={styles.itemOpeningHours}>
-                                    Opening hours:{' '}
-                                    {item.openingHours.schedule.mon.isOpen
-                                        ? 'Open'
-                                        : 'Closed'}
+                                    {expandedShopId === item.id
+                                        ? 'Hide Opening Hours'
+                                        : 'Show Opening Hours'}
                                 </Text>
-                            )}
+                            </Pressable>
+
+                            {expandedShopId === item.id &&
+                                item.openingHours && (
+                                    <View style={styles.openingHoursContainer}>
+                                        {Object.keys(
+                                            item.openingHours.schedule
+                                        ).map((day) => {
+                                            const schedule =
+                                                item.openingHours?.schedule[
+                                                    day as keyof typeof item.openingHours.schedule
+                                                ]
+                                            return (
+                                                <View
+                                                    key={day}
+                                                    style={styles.day}
+                                                >
+                                                    <Text
+                                                        style={styles.dayName}
+                                                    >
+                                                        {day}:
+                                                    </Text>
+                                                    <Text
+                                                        style={styles.dayHours}
+                                                    >
+                                                        {schedule?.isOpen
+                                                            ? `Open from ${schedule.periods[0].from.hours}:${schedule.periods[0].from.minutes < 10 ? '0' : ''}${schedule.periods[0].from.minutes} to ${schedule.periods[0].to.hours}:${schedule.periods[0].to.minutes < 10 ? '0' : ''}${schedule.periods[0].to.minutes}`
+                                                            : 'Closed'}
+                                                    </Text>
+                                                </View>
+                                            )
+                                        })}
+                                    </View>
+                                )}
                         </View>
                     )}
                 />
@@ -114,6 +157,31 @@ const styles = StyleSheet.create({
     },
     itemOpeningHours: {
         fontSize: 12,
-        color: 'rgba(250, 236, 43, 0.95)',
+        color: 'rgba(0, 0, 0, 0.95)',
+    },
+    dropdownButton: {
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        marginTop: 10,
+        backgroundColor: '#FFDD00',
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    openingHoursContainer: {
+        marginTop: 10,
+        backgroundColor: '#f0f0f0',
+        padding: 10,
+        borderRadius: 8,
+    },
+    day: {
+        flexDirection: 'row',
+        marginBottom: 5,
+    },
+    dayName: {
+        fontWeight: '600',
+        marginRight: 5,
+    },
+    dayHours: {
+        fontWeight: '400',
     },
 })
