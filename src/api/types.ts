@@ -6,7 +6,7 @@ export interface Shop {
         latitude: string
         longitude: string
     }
-    openingHours: OpeningHours | null
+    openingHours?: OpeningHours | null
 }
 
 export interface Saloon {
