@@ -6,11 +6,12 @@ export interface Shop {
         latitude: string
         longitude: string
     }
+    openingHours: OpeningHours | null
 }
 
 export interface Saloon {
     id: number
-    salonSize: string
+    salonSize: string | null
     name: string
     location: {
         key: string
@@ -27,9 +28,9 @@ export interface Saloon {
     active: boolean
     visibleInMap: boolean
     openingDate: string
-    relativeLocation: string
+    relativeLocation: string | null
     districts: Array<{ key: string; name: string; priority: number }>
-    webPaymentProviders: Array<string>
+    webPaymentProviders: Array<string> | null
 }
 
 export interface OpeningHours {

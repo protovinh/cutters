@@ -1,22 +1,34 @@
 import 'expo-dev-client'
 import {
     Text,
-    Image,
     View,
     StyleSheet,
     FlatList,
     Dimensions,
     ActivityIndicator,
 } from 'react-native'
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import { useLocationPermission } from '@/hooks/useLocationPermission'
 import { useFetchSalons } from '@/api/useFetchSalons'
 import CuttersMapStyle from '@/constants/CuttersMapStyle.json'
 import { CustomMarker } from '@/components/ui/CustomMarker'
+import { mockSaloon } from '@/api/mocks/saloonNorge'
+import { openingHours } from '@/api/mocks/openingHours'
 
 export default function HomeScreen() {
     const { location } = useLocationPermission()
     const { data, loading } = useFetchSalons()
+
+    // Combine mock salon data with opening hours data
+    const salonsWithOpeningHours = mockSaloon.salons.map((salon) => {
+        const salonHours = openingHours.find(
+            (hours) => hours.openinghours.salonId === salon.id
+        )
+        return {
+            ...salon,
+            openingHours: salonHours ? salonHours.openinghours : null,
+        }
+    })
 
     return (
         <View style={styles.container}>
@@ -37,7 +49,7 @@ export default function HomeScreen() {
                     longitudeDelta: 0.0421,
                 }}
             >
-                {data.map((shop) => (
+                {salonsWithOpeningHours.map((shop) => (
                     <CustomMarker key={shop.id} marker={shop} />
                 ))}
             </MapView>
@@ -45,7 +57,7 @@ export default function HomeScreen() {
             <View style={styles.listContainer}>
                 <FlatList
                     horizontal={true}
-                    data={data}
+                    data={salonsWithOpeningHours}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
                         <View style={styles.item}>
@@ -53,6 +65,14 @@ export default function HomeScreen() {
                             <Text style={styles.itemAddress}>
                                 {item.address}
                             </Text>
+                            {item.openingHours && (
+                                <Text style={styles.itemOpeningHours}>
+                                    Opening hours:{' '}
+                                    {item.openingHours.schedule.mon.isOpen
+                                        ? 'Open'
+                                        : 'Closed'}
+                                </Text>
+                            )}
                         </View>
                     )}
                 />
@@ -90,6 +110,10 @@ const styles = StyleSheet.create({
     },
     itemAddress: {
         fontSize: 13,
+        color: 'rgba(250, 236, 43, 0.95)',
+    },
+    itemOpeningHours: {
+        fontSize: 12,
         color: 'rgba(250, 236, 43, 0.95)',
     },
 })

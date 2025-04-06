@@ -24,3 +24,5 @@ export function useFetchSalons() {
     }, [])
     return { data, loading }
 }
+
+//Fetching of Test data.
