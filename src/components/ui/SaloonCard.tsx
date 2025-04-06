@@ -11,9 +11,11 @@ import {
 import { useState } from 'react'
 import { mockSaloon } from '@/api/mocks/saloonNorge'
 import { openingHours } from '@/api/mocks/openingHours'
+import { useFetchSalons } from '@/api/useFetchSalons'
 
 export function SaloonCard() {
     const [expandedShopId, setExpandedShopId] = useState<number | null>(null)
+    const { data, loading } = useFetchSalons()
 
     const salonsWithOpeningHours = mockSaloon.salons.map((salon) => {
         const salonHours = openingHours.find(
@@ -93,7 +95,7 @@ export function SaloonCard() {
 const styles = StyleSheet.create({
     listContainer: {
         position: 'absolute',
-        bottom: 20,
+        bottom: 60,
         width: '100%',
         maxHeight: Dimensions.get('screen').height * 0.3,
         backgroundColor: 'rgba(255, 255, 255, 0)',

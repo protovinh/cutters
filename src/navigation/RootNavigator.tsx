@@ -45,10 +45,12 @@ export default function RootNavigator() {
                     }}
                 />
                 <Tab.Screen
-                    name="Scissor"
+                    name="Dine bestillinger"
                     component={ScissorScreen}
                     options={{
+                        headerTitleStyle: { color: '#FFFFFF' },
                         headerShown: true,
+                        headerStyle: { backgroundColor: '#000000' },
                         tabBarIcon: ({ color }) => (
                             <Entypo
                                 name="scissors"
@@ -60,10 +62,12 @@ export default function RootNavigator() {
                     }}
                 />
                 <Tab.Screen
-                    name="About"
+                    name="Profil"
                     component={AboutScreen}
                     options={{
                         headerShown: true,
+                        headerStyle: { backgroundColor: '#000000' },
+                        headerTitleStyle: { color: '#FFFFFF' },
                         tabBarIcon: ({ color }) => (
                             <Octicons name="person" size={28} color={color} />
                         ),

@@ -9,8 +9,8 @@ export default function ScissorScreen() {
         <Tab.Navigator
             screenOptions={{
                 tabBarActiveTintColor: '#FFDD00',
-
-                tabBarStyle: { backgroundColor: '#25292e' },
+                tabBarInactiveTintColor: '#FFFFFF',
+                tabBarStyle: { backgroundColor: '#000000' },
                 tabBarIndicatorStyle: {
                     backgroundColor: '#FFDD00',
                     padding: 2,
