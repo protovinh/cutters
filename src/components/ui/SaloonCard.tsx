@@ -12,8 +12,14 @@ import { useState } from 'react'
 import { mockSaloon } from '@/api/mocks/saloonNorge'
 import { openingHours } from '@/api/mocks/openingHours'
 import { useFetchSalons } from '@/api/useFetchSalons'
+import { Shop } from '@/api/types'
+import React from 'react'
 
-export function SaloonCard() {
+interface Props {
+    item: Shop
+    setExpandedMarkerId: (id: number) => void
+}
+export const SaloonCard = React.forwardRef((props: Props, ref: any) => {
     const [expandedShopId, setExpandedShopId] = useState<number | null>(null)
     const { data, loading } = useFetchSalons()
 
@@ -30,83 +36,113 @@ export function SaloonCard() {
     const toggleOpeningHours = (shopId: number) => {
         setExpandedShopId((prevId) => (prevId === shopId ? null : shopId))
     }
-    return (
-        <View style={styles.listContainer}>
-            <FlatList
-                horizontal={true}
-                data={salonsWithOpeningHours}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                    <View style={styles.item}>
-                        <Text style={styles.itemName}>{item.name}</Text>
-                        <Text style={styles.itemAddress}>{item.address}</Text>
-                        <Pressable
-                            onPress={() => toggleOpeningHours(item.id)}
-                            style={styles.dropdownButton}
-                            accessibilityRole="button"
-                            accessibilityLabel={
-                                expandedShopId === item.id
-                                    ? `Hide opening hours for ${item.name}`
-                                    : `Show opening hours for ${item.name}`
-                            }
-                        >
-                            <Text style={styles.dropdownText}>
-                                {expandedShopId === item.id
-                                    ? 'Hide Opening Hours'
-                                    : 'Show Opening Hours'}
-                            </Text>
-                        </Pressable>
+    const handleItemPress = (item: Shop) => {
+        try {
+            if (ref && item.coordinates) {
+                // First set the expanded marker
+                props.setExpandedMarkerId(item.id)
+                setExpandedShopId((prevId) =>
+                    prevId === item.id ? null : item.id
+                )
 
-                        {expandedShopId === item.id && item.openingHours && (
-                            <View
-                                style={styles.openingHoursContainer}
-                                accessible
-                                accessibilityLabel={`Opening hours for ${item.name}`}
-                            >
-                                {Object.keys(item.openingHours.schedule).map(
-                                    (day) => {
-                                        const schedule =
-                                            item.openingHours?.schedule[
-                                                day as keyof typeof item.openingHours.schedule
-                                            ]
-                                        return (
-                                            <View key={day} style={styles.day}>
-                                                <Text style={styles.dayName}>
-                                                    {day}:
-                                                </Text>
-                                                <Text style={styles.dayHours}>
-                                                    {schedule?.isOpen
-                                                        ? `Open from ${schedule.periods[0].from.hours}:${schedule.periods[0].from.minutes < 10 ? '0' : ''}${schedule.periods[0].from.minutes} to ${schedule.periods[0].to.hours}:${schedule.periods[0].to.minutes < 10 ? '0' : ''}${schedule.periods[0].to.minutes}`
-                                                        : 'Closed'}
-                                                </Text>
-                                            </View>
-                                        )
-                                    }
-                                )}
-                            </View>
-                        )}
-                    </View>
-                )}
-            />
-        </View>
+                // Use a slight delay to ensure smooth transition
+                setTimeout(() => {
+                    if (ref.current) {
+                        ref.current.animateToRegion(
+                            {
+                                latitude: parseFloat(item.coordinates.latitude),
+                                longitude: parseFloat(
+                                    item.coordinates.longitude
+                                ),
+                                latitudeDelta: 0.01,
+                                longitudeDelta: 0.01,
+                            },
+                            1000
+                        )
+                    }
+                }, 100)
+            }
+        } catch (error) {
+            console.error('Error animating map:', error)
+        }
+    }
+    return (
+        <Pressable
+            onPress={() => {
+                handleItemPress(props.item)
+            }}
+            style={styles.item}
+        >
+            <Text style={styles.itemName}>{props.item.name}</Text>
+            <Text style={styles.itemAddress}>{props.item.address}</Text>
+            <Pressable
+                onPress={() => toggleOpeningHours(props.item.id)}
+                style={styles.dropdownButton}
+                accessibilityRole="button"
+                accessibilityLabel={
+                    expandedShopId === props.item.id
+                        ? `Hide opening hours for ${props.item.name}`
+                        : `Show opening hours for ${props.item.name}`
+                }
+            >
+                <Text style={styles.dropdownText}>
+                    {expandedShopId === props.item.id
+                        ? 'Hide Opening Hours'
+                        : 'Show Opening Hours'}
+                </Text>
+            </Pressable>
+
+            {expandedShopId === props.item.id && props.item.openingHours && (
+                <View
+                    style={styles.openingHoursContainer}
+                    accessible
+                    accessibilityLabel={`Opening hours for ${props.item.name}`}
+                >
+                    {Object.keys(props.item.openingHours.schedule).map(
+                        (day) => {
+                            const schedule =
+                                props.item.openingHours?.schedule[
+                                    day as keyof typeof props.item.openingHours.schedule
+                                ]
+                            return (
+                                <View key={day} style={styles.day}>
+                                    <Text style={styles.dayName}>{day}:</Text>
+                                    <Text style={styles.dayHours}>
+                                        {schedule?.isOpen
+                                            ? `Open from ${schedule.periods[0].from.hours}:${schedule.periods[0].from.minutes < 10 ? '0' : ''}${schedule.periods[0].from.minutes} to ${schedule.periods[0].to.hours}:${schedule.periods[0].to.minutes < 10 ? '0' : ''}${schedule.periods[0].to.minutes}`
+                                            : 'Closed'}
+                                    </Text>
+                                </View>
+                            )
+                        }
+                    )}
+                </View>
+            )}
+        </Pressable>
     )
-}
+})
 
 const styles = StyleSheet.create({
     listContainer: {
-        position: 'absolute',
-        bottom: 60,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         width: '100%',
-        maxHeight: Dimensions.get('screen').height * 0.3,
-        backgroundColor: 'rgba(255, 255, 255, 0)',
-        margin: 10,
+        height: '100%',
     },
     item: {
         padding: 20,
-        width: Dimensions.get('screen').height * 0.3,
-        margin: 10,
+        width: '100%',
         backgroundColor: 'rgba(0, 0, 0, 0.95)',
         borderRadius: 16,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     itemName: {
         fontSize: 16,

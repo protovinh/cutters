@@ -1,17 +1,17 @@
 import { Shop } from '@/api/types'
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import { Marker } from 'react-native-maps'
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 
 interface Props {
     marker: Shop
+    isExpanded: boolean
+    onPress: () => void
 }
 
-export function CustomMarker(props: Props) {
+export function CustomMarkerComponent(props: Props) {
     const latitude = parseFloat(props.marker.coordinates.latitude)
     const longitude = parseFloat(props.marker.coordinates.longitude)
-
-    const [expanded, setExpanded] = useState(false)
 
     if (isNaN(latitude) || isNaN(longitude)) {
         console.log(`Invalid coordinates for marker ${props.marker.id}`)
@@ -22,20 +22,33 @@ export function CustomMarker(props: Props) {
         <Marker
             key={props.marker.id}
             coordinate={{ latitude, longitude }}
-            title={props.marker.name}
-            description={props.marker.address}
             accessibilityLabel={`Location: ${props.marker.name}, Address: ${props.marker.address}`}
             accessible={true}
-            onPress={() => setExpanded(!expanded)}
+            onPress={() => props.onPress()}
+            tracksViewChanges={false}
         >
-            <View style={[styles.circle, expanded && styles.circleExpanded]}>
+            <View
+                style={[
+                    styles.circle,
+                    props.isExpanded && styles.circleExpanded,
+                ]}
+            >
                 <Text style={styles.text}>
-                    {expanded ? props.marker.name : props.marker.name[0]}
+                    {props.isExpanded
+                        ? props.marker.name
+                        : props.marker.name[0]}
                 </Text>
             </View>
         </Marker>
     )
 }
+
+export const CustomMarker = memo(
+    CustomMarkerComponent,
+    (prevProps, nextProps) => {
+        return prevProps.isExpanded === nextProps.isExpanded
+    }
+)
 
 const styles = StyleSheet.create({
     circle: {

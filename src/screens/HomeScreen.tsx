@@ -8,10 +8,16 @@ import { CustomMarker } from '@/components/ui/CustomMarker'
 import { mockSaloon } from '@/api/mocks/saloonNorge'
 import { openingHours } from '@/api/mocks/openingHours'
 import { SaloonCard } from '@/components/ui/SaloonCard'
+import { useMapActions } from '@/hooks/useMapActions'
+import PagerView from 'react-native-pager-view'
+import { useState } from 'react'
 
 export default function HomeScreen() {
     const { location } = useLocationPermission()
     const { data, loading } = useFetchSalons()
+    const [expandedMarkerId, setExpandedMarkerId] = useState<number | null>(
+        null
+    )
 
     const salonsWithOpeningHours = mockSaloon.salons.map((salon) => {
         const salonHours = openingHours.find(
@@ -22,7 +28,12 @@ export default function HomeScreen() {
             openingHours: salonHours ? salonHours.openinghours : null,
         }
     })
-
+    const { mapRef, pagerRef, handleMarkerPress, handlePageSelected } =
+        useMapActions({
+            data: salonsWithOpeningHours,
+            loading,
+            setExpandedMarkerId,
+        })
     return (
         <View style={styles.container}>
             {loading ? (
@@ -32,6 +43,9 @@ export default function HomeScreen() {
             ) : null}
             <MapView
                 style={styles.map}
+                ref={mapRef}
+                rotateEnabled={false}
+                pitchEnabled={false}
                 showsUserLocation
                 provider={PROVIDER_GOOGLE}
                 customMapStyle={CuttersMapStyle}
@@ -43,10 +57,41 @@ export default function HomeScreen() {
                 }}
             >
                 {salonsWithOpeningHours.map((shop) => (
-                    <CustomMarker key={shop.id} marker={shop} />
+                    <CustomMarker
+                        key={shop.id}
+                        marker={shop}
+                        isExpanded={expandedMarkerId === shop.id}
+                        onPress={() => handleMarkerPress(shop.id)}
+                    />
                 ))}
             </MapView>
-            {SaloonCard()}
+            {loading ? null : (
+                <View style={styles.overlayContainer}>
+                    <View style={styles.pagerContainer}>
+                        <PagerView
+                            ref={pagerRef}
+                            style={styles.pagerView}
+                            initialPage={0}
+                            onPageSelected={handlePageSelected}
+                            orientation="horizontal"
+                        >
+                            {salonsWithOpeningHours.map((shop, index) => (
+                                <View key={shop.id} style={styles.page}>
+                                    <View style={styles.debugPage}>
+                                        <SaloonCard
+                                            item={shop}
+                                            ref={mapRef}
+                                            setExpandedMarkerId={
+                                                setExpandedMarkerId
+                                            }
+                                        />
+                                    </View>
+                                </View>
+                            ))}
+                        </PagerView>
+                    </View>
+                </View>
+            )}
         </View>
     )
 }
@@ -57,5 +102,37 @@ const styles = StyleSheet.create({
     },
     map: {
         ...StyleSheet.absoluteFillObject,
+    },
+    loadingContainer: {
+        ...StyleSheet.absoluteFillObject,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        zIndex: 1000,
+    },
+    overlayContainer: {
+        ...StyleSheet.absoluteFillObject,
+        justifyContent: 'flex-end',
+        pointerEvents: 'box-none',
+    },
+    pagerContainer: {
+        height: 200,
+        marginBottom: 80,
+        backgroundColor: 'transparent',
+    },
+    pagerView: {
+        flex: 1,
+        backgroundColor: 'transparent',
+    },
+    page: {
+        flex: 1,
+        pointerEvents: 'none',
+    },
+    debugPage: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        pointerEvents: 'none',
     },
 })
