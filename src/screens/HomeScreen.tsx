@@ -33,6 +33,7 @@ export default function HomeScreen() {
             data: salonsWithOpeningHours,
             loading,
             setExpandedMarkerId,
+            expandedMarkerId,
         })
     return (
         <View style={styles.container}>

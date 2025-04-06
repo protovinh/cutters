@@ -7,12 +7,14 @@ interface UseMapActionsProps {
     data: Shop[]
     loading: boolean
     setExpandedMarkerId: (id: number) => void
+    expandedMarkerId?: number | null
 }
 
 export function useMapActions({
     data,
     loading,
     setExpandedMarkerId,
+    expandedMarkerId,
 }: UseMapActionsProps) {
     const mapRef = useRef<MapView>(null)
 
@@ -30,16 +32,20 @@ export function useMapActions({
                 },
                 1000
             )
-            pagerRef.current.setPage(0)
-            setExpandedMarkerId(data[0].id)
+            if (!expandedMarkerId) {
+                pagerRef.current.setPage(0)
+                setExpandedMarkerId(data[0].id)
+            }
         }
-    }, [data, loading])
+    }, [data, loading, expandedMarkerId])
 
     const handleMarkerPress = (markerId: number) => {
-        setExpandedMarkerId(markerId)
-
         const shop = data.find((s) => s.id === markerId)
         if (shop && mapRef.current) {
+            // First set the expanded marker
+            setExpandedMarkerId(markerId)
+
+            // Then animate the map
             mapRef.current.animateToRegion(
                 {
                     latitude: parseFloat(shop.coordinates.latitude),
@@ -47,8 +53,10 @@ export function useMapActions({
                     latitudeDelta: 0.01,
                     longitudeDelta: 0.01,
                 },
-                200
+                500
             )
+
+            // Finally update the pager view
             const pageIndex = data.findIndex((s) => s.id === markerId)
             if (pageIndex !== -1 && pagerRef.current) {
                 pagerRef.current.setPage(pageIndex)
@@ -60,16 +68,22 @@ export function useMapActions({
         const newPage = event.nativeEvent.position
         const shop = data[newPage]
         if (shop && mapRef.current) {
-            mapRef.current.animateToRegion(
-                {
-                    latitude: parseFloat(shop.coordinates.latitude),
-                    longitude: parseFloat(shop.coordinates.longitude),
-                    latitudeDelta: 0.01,
-                    longitudeDelta: 0.01,
-                },
-                200
-            )
             setExpandedMarkerId(shop.id)
+
+            // Add a small delay before animating the map
+            setTimeout(() => {
+                if (mapRef.current) {
+                    mapRef.current.animateToRegion(
+                        {
+                            latitude: parseFloat(shop.coordinates.latitude),
+                            longitude: parseFloat(shop.coordinates.longitude),
+                            latitudeDelta: 0.01,
+                            longitudeDelta: 0.01,
+                        },
+                        500
+                    )
+                }
+            }, 100)
         }
     }
 

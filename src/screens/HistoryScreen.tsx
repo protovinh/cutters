@@ -5,7 +5,7 @@ export default function HistoryScreen() {
     return (
         <View style={styles.container}>
             <Button
-                title="History"
+                title="Press me"
                 onPress={() => {
                     console.log('Pressed')
                 }}

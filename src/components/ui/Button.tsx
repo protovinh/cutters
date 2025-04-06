@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         padding: 12,
         width: '100%',
+        minWidth: 150,
     },
     disabledContainer: {
         display: 'flex',

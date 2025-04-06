@@ -19,7 +19,7 @@ export default {
             },
             infoPlist: {
                 ITSAppUsesNonExemptEncryption: false,
-                LocationWhenInUseUsageDescription:
+                NSLocationWhenInUseUsageDescription:
                     'This app needs access to your location to show you the nearest salons',
             },
         },
