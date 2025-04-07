@@ -1,50 +1,76 @@
-# Welcome to your Expo app 👋
+# Cutters - The start of a new era
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+App is created with Expo react native. It uses the prebuild configuration, which means that it will generate the /ios and /android folders on build.
 
 ## Get started
 
-1. Install dependencies
+1. Install dependencies and ENV variables
 
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
 
-2. Start the app
+    ```
 
-   ```bash
-    npx expo start
-   ```
+Rename `.env.example` -> `.env` and add a working `GOOGLE_API_KEY=`
+Guide to create Google API key here https://docs.expo.dev/versions/latest/sdk/map-view
 
-In the output, you'll find options to open the app in a
+2. Start the app for Android
+   Requirements:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+    - Android Studio
+    - Running Android simulator or connected Android device. [Guide here if needed](https://reactnative.dev/docs/running-on-device)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+    ```bash
+     npm run android
+    ```
 
-## Get a fresh project
+3. Start the app for Android
+   Requirements
 
-When you're ready, run:
+    - Xcode
+    - Running iPhone simulator or connected iphone device. [Guide here if needed](https://reactnative.dev/docs/running-on-device?platform=ios)
+
+    ```bash
+     npm run ios
+    ```
+
+## Deployments
+
+Using Expo Application Services (EAS) for deployment
+
+It's required to have an Expo account. [Register here](https://expo.dev/signup)
+
+It's free up to 1 000 monthly active user (MAU). An active user = 1 user launching the app in a given month
+For 1,000 to 50,000 MAU - the pricing is 99$/month.
+
+Expo provide Over-the-air update, which is a feature allowing deployment without going through the ordinary Apple and Google submission process.
+
+For development environment, for each new device register the UUID with this link https://expo.dev/register-device/26128e5e-c70d-4d80-afa1-a235a5d81e22
+The Expo development client require a UUID to identify and authenticate with the deployed development build. [Read more here](https://docs.expo.dev/build/internal-distribution/)
 
 ```bash
-npm run reset-project
+# build a development profile
+eas build --profile development
+
+# build production profile
+eas build --profile production
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+**For every new registered UUID device, it's required to build a new development profile build!**
 
-## Learn more
+### OTA update
 
-To learn more about developing your project with Expo, look at the following resources:
+Specify a branch and message for over-the-air update
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```
+eas update --branch test --message="a message"
 
-## Join the community
+```
 
-Join our community of developers creating universal apps.
+## Run tests
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Running integration test with Jest framework
+
+```
+npm run test
+```
