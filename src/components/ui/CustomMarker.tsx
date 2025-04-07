@@ -25,7 +25,7 @@ export function CustomMarkerComponent(props: Props) {
             accessibilityLabel={`Location: ${props.marker.name}, Address: ${props.marker.address}`}
             accessible={true}
             onPress={() => props.onPress()}
-            tracksViewChanges={Platform.OS === 'ios'}
+            tracksViewChanges={Platform.OS === 'android'}
         >
             <View
                 style={[
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         borderColor: 'black',
     },
     circleExpanded: {
-        minWidth: 80,
+        minWidth: 150,
         borderRadius: 20,
         paddingHorizontal: 10,
     },
