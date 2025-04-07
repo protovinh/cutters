@@ -1,7 +1,7 @@
 import { Shop } from '@/api/types'
 import React, { useState, memo } from 'react'
 import { Marker } from 'react-native-maps'
-import { View, Text, StyleSheet, Pressable } from 'react-native'
+import { View, Text, StyleSheet, Pressable, Platform } from 'react-native'
 
 interface Props {
     marker: Shop
@@ -25,7 +25,7 @@ export function CustomMarkerComponent(props: Props) {
             accessibilityLabel={`Location: ${props.marker.name}, Address: ${props.marker.address}`}
             accessible={true}
             onPress={() => props.onPress()}
-            tracksViewChanges={false}
+            tracksViewChanges={Platform.OS === 'ios'}
         >
             <View
                 style={[

@@ -62,7 +62,10 @@ export default function HomeScreen() {
                         key={shop.id}
                         marker={shop}
                         isExpanded={expandedMarkerId === shop.id}
-                        onPress={() => handleMarkerPress(shop.id)}
+                        onPress={() => {
+                            console.log(shop.id)
+                            handleMarkerPress(shop.id)
+                        }}
                     />
                 ))}
             </MapView>
