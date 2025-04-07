@@ -42,10 +42,8 @@ export function useMapActions({
     const handleMarkerPress = (markerId: number) => {
         const shop = data.find((s) => s.id === markerId)
         if (shop && mapRef.current) {
-            // First set the expanded marker
             setExpandedMarkerId(markerId)
 
-            // Then animate the map
             mapRef.current.animateToRegion(
                 {
                     latitude: parseFloat(shop.coordinates.latitude),
@@ -56,7 +54,6 @@ export function useMapActions({
                 500
             )
 
-            // Finally update the pager view
             const pageIndex = data.findIndex((s) => s.id === markerId)
             if (pageIndex !== -1 && pagerRef.current) {
                 pagerRef.current.setPage(pageIndex)
@@ -70,7 +67,6 @@ export function useMapActions({
         if (shop && mapRef.current) {
             setExpandedMarkerId(shop.id)
 
-            // Add a small delay before animating the map
             setTimeout(() => {
                 if (mapRef.current) {
                     mapRef.current.animateToRegion(

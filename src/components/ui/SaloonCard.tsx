@@ -1,17 +1,6 @@
 import 'expo-dev-client'
-import {
-    Text,
-    View,
-    StyleSheet,
-    FlatList,
-    Dimensions,
-    Pressable,
-    AccessibilityInfo,
-} from 'react-native'
+import { Text, View, StyleSheet, Pressable } from 'react-native'
 import { useState } from 'react'
-import { mockSaloon } from '@/api/mocks/saloonNorge'
-import { openingHours } from '@/api/mocks/openingHours'
-import { useFetchSalons } from '@/api/useFetchSalons'
 import { Shop } from '@/api/types'
 import React from 'react'
 
@@ -21,31 +10,18 @@ interface Props {
 }
 export const SaloonCard = React.forwardRef((props: Props, ref: any) => {
     const [expandedShopId, setExpandedShopId] = useState<number | null>(null)
-    const { data, loading } = useFetchSalons()
 
-    const salonsWithOpeningHours = mockSaloon.salons.map((salon) => {
-        const salonHours = openingHours.find(
-            (hours) => hours.openinghours.salonId === salon.id
-        )
-        return {
-            ...salon,
-            openingHours: salonHours ? salonHours.openinghours : null,
-        }
-    })
-
-    const toggleOpeningHours = (shopId: number) => {
+    /*     const toggleOpeningHours = (shopId: number) => {
         setExpandedShopId((prevId) => (prevId === shopId ? null : shopId))
-    }
+    } */
     const handleItemPress = (item: Shop) => {
         try {
             if (ref && item.coordinates) {
-                // First set the expanded marker
                 props.setExpandedMarkerId(item.id)
                 setExpandedShopId((prevId) =>
                     prevId === item.id ? null : item.id
                 )
 
-                // Use a slight delay to ensure smooth transition
                 setTimeout(() => {
                     if (ref.current) {
                         ref.current.animateToRegion(
@@ -75,7 +51,7 @@ export const SaloonCard = React.forwardRef((props: Props, ref: any) => {
         >
             <Text style={styles.itemName}>{props.item.name}</Text>
             <Text style={styles.itemAddress}>{props.item.address}</Text>
-            <Pressable
+            {/*  <Pressable
                 onPress={() => toggleOpeningHours(props.item.id)}
                 style={styles.dropdownButton}
                 accessibilityRole="button"
@@ -90,7 +66,7 @@ export const SaloonCard = React.forwardRef((props: Props, ref: any) => {
                         ? 'Hide Opening Hours'
                         : 'Show Opening Hours'}
                 </Text>
-            </Pressable>
+            </Pressable> */}
 
             {expandedShopId === props.item.id && props.item.openingHours && (
                 <View

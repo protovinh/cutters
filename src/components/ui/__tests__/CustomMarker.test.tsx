@@ -20,7 +20,7 @@ const mockShop: Shop = {
         latitude: '59.9139',
         longitude: '10.7522',
     },
-    openingHours: undefined, // Optional based on your type
+    openingHours: undefined,
 }
 
 describe('CustomMarker', () => {
@@ -33,10 +33,8 @@ describe('CustomMarker', () => {
             />
         )
 
-        // Should show only the first letter of the name
         expect(getByText('T')).toBeTruthy()
 
-        // Should have proper accessibility label
         expect(
             getByLabelText('Location: Test Shop, Address: 123 Test Street')
         ).toBeTruthy()
@@ -51,7 +49,6 @@ describe('CustomMarker', () => {
             />
         )
 
-        // Full shop name should be shown
         expect(getByText('Test Shop')).toBeTruthy()
     })
 

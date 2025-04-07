@@ -46,6 +46,8 @@ export function CustomMarkerComponent(props: Props) {
 export const CustomMarker = memo(
     CustomMarkerComponent,
     (prevProps, nextProps) => {
+        // Sørger at CustomMarker bare renderes på nytt viss isExpanded endrer seg.
+        // hvis ikke jeg gjør dette, så vil alle marker renderes på nytt når en marker endrer seg.
         return prevProps.isExpanded === nextProps.isExpanded
     }
 )
