@@ -3,7 +3,6 @@ import { render, fireEvent } from '@testing-library/react-native'
 import { CustomMarker } from '../CustomMarker' // Adjust the path if needed
 import { Shop } from '@/api/types'
 
-// ✅ Mock the Marker component from react-native-maps
 jest.mock('react-native-maps', () => {
     const { View } = require('react-native')
     return {
@@ -13,7 +12,6 @@ jest.mock('react-native-maps', () => {
     }
 })
 
-// ✅ Mock data for a shop
 const mockShop: Shop = {
     id: 1,
     name: 'Test Shop',
