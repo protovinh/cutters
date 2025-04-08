@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react-native'
-import { CustomMarker } from '../CustomMarker' // Adjust the path if needed
+import { CustomMarker } from '../CustomMarker'
 import { Shop } from '@/api/types'
 
 jest.mock('react-native-maps', () => {
